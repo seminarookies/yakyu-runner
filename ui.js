@@ -85,6 +85,7 @@
   /* ---------------- プレイ ---------------- */
   function startPlay(list, meta) {
     if (!list || !list.length) return;
+    if (player) { player.cancel(); player = null; }
     game = Engine.createGame(list, meta);
     show('play');
     if (!field) {
@@ -124,6 +125,7 @@
     var q = game.current();
     if (!q) return;
     currentPlay = q;
+    runId++;
     clearCard();
     setHead(q);
     clearFeedback();
@@ -138,7 +140,12 @@
 
     field.layout(q);
     field.clearLabels();
-    showRoundCard(q, function () { playToDecision(q); });
+    var myRun = runId;
+    showRoundCard(q, function () {
+      // 別の問題に切り替わっていたら何もしない（古いタイマーの取りこぼし対策）
+      if (myRun !== runId) return;
+      playToDecision(q);
+    });
   }
 
   // 問題と問題のあいだに「だい◯もん」を出して、切れ目をはっきりさせる
@@ -152,12 +159,13 @@
     if (global.Sound) global.Sound.play('cue');
     var t1 = setTimeout(function () {
       card.classList.remove('is-on');
-      var t2 = setTimeout(function () { if (!(player && player.cancelled)) done(); }, 240);
+      var t2 = setTimeout(done, 240);
       cardTimers.push(t2);
     }, 1000);
     cardTimers.push(t1);
   }
 
+  var runId = 0;
   var cardTimers = [];
   function clearCard() {
     cardTimers.forEach(clearTimeout);
@@ -167,6 +175,7 @@
 
   function playToDecision(q) {
     if (player) player.cancel();
+    var myRun = runId;
     player = global.Anim.create(field, {
       onFlash: function (what) {
         if (what === 'outs') {
@@ -177,10 +186,13 @@
       }
     });
     var anim = q.animation || {};
+    var mine = player;
     player.play((anim.setup || []).concat(anim.toDecision || [])).then(function () {
-      if (player.cancelled) return;
+      if (mine.cancelled || myRun !== runId) return;
       setDecisionMode(true);
-      setTimeout(function () { if (!player.cancelled) openAnswers(q); }, 420);
+      setTimeout(function () {
+        if (!mine.cancelled && myRun === runId) openAnswers(q);
+      }, 420);
     });
   }
 
@@ -313,9 +325,11 @@
 
   function runCorrectAnimation(q) {
     if (player) player.cancel();
+    var myRun = runId;
     player = global.Anim.create(field, {});
     var steps = (q.animation && q.animation.onCorrect) || [];
     player.play(steps).then(function () {
+      if (myRun !== runId) return;
       var btn = $('btn-next');
       if (!btn) return;
       btn.disabled = false;

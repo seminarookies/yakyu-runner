@@ -1,5 +1,5 @@
 /* sw.js — オフライン用。ファイルを直したら CACHE の v1 を v2, v3... と増やす */
-const CACHE = 'yakyu-runner-v2';
+const CACHE = 'yakyu-runner-v3';
 const FILES = [
   './',
   './index.html',
