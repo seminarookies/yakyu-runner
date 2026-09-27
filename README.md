@@ -201,7 +201,7 @@ https://seminarookies.github.io/yakyu-runner/
 `sw.js` の1行目あたりにある
 
 ```js
-const CACHE = 'yakyu-runner-v3';
+const CACHE = 'yakyu-runner-v4';
 ```
 
 の **v1 を v2、v3 …と増やして**アップロードし直すと、新しいものが届きます。

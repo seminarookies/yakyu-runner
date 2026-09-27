@@ -22,17 +22,25 @@
     F6: '遊', F7: '左', F8: '中', F9: '右'
   };
 
+  // 守備位置の一時的なズレ（前進守備など）
+  var OFFSET = {};
+
   function resolve(p) {
     if (Array.isArray(p)) return [p[0], p[1]];
+    // mid() の結果。再生するたびに計算するので、前進守備のズレも反映される
+    if (p && p.m) {
+      var A = resolve(p.m[0]), B = resolve(p.m[1]), f = p.m[2];
+      return [A[0] + (B[0] - A[0]) * f, A[1] + (B[1] - A[1]) * f];
+    }
     var k = ALIAS[p] || p;
     var v = POS[k] || POS.HOME;
-    return [v[0], v[1]];
+    var o = OFFSET[k];
+    return o ? [v[0] + o[0], v[1] + o[1]] : [v[0], v[1]];
   }
 
   // 2点の間の点（データ側で「打球方向が分かった瞬間」の位置を書くのに使う）
   function mid(a, b, f) {
-    var A = resolve(a), B = resolve(b);
-    return [A[0] + (B[0] - A[0]) * f, A[1] + (B[1] - A[1]) * f];
+    return { m: [a, b, f] };
   }
 
   var NS = 'http://www.w3.org/2000/svg';
@@ -250,10 +258,28 @@
     this.tapsLayer.classList.remove('is-on');
   };
 
+  // 前進守備（内野が前に出ている）の表示
+  var IN_KEYS = ['F3', 'F4', 'F5', 'F6'];
+  Field.prototype.setInfieldIn = function (on) {
+    var self = this;
+    IN_KEYS.forEach(function (k) {
+      var g = self.svg.querySelector('[data-fielder="' + k + '"]');
+      var p = POS[k], h = POS.HOME, f = 0.3;
+      if (on) {
+        OFFSET[k] = [(h[0] - p[0]) * f, (h[1] - p[1]) * f];
+        if (g) g.setAttribute('transform', 'translate(' + OFFSET[k][0] + ',' + OFFSET[k][1] + ')');
+      } else {
+        delete OFFSET[k];
+        if (g) g.removeAttribute('transform');
+      }
+    });
+  };
+
   // 問題データから初期配置をつくる
   Field.prototype.layout = function (q) {
     this.clearActors();
     this.disableBaseTap();
+    this.setInfieldIn(!!q.infieldIn);
     var runners = q.runners || {};
     var pb = (typeof q.playerBase === 'number') ? q.playerBase : 0;
 

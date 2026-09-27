@@ -143,10 +143,10 @@
       ruleType: 'basic_judgment', tacticalNote: null,
       animation: {
         toDecision: pitch().concat([
-          { actor: 'ball', from: 'HOME', to: M('HOME', 'F6', 0.5), dur: 620, arc: true, lift: 78 }
+          { actor: 'ball', from: 'HOME', to: 'F6', dur: 620, arc: true, lift: 88, frac: 0.62 }
         ]),
         onCorrect: [
-          { par: [{ actor: 'ball', from: M('HOME', 'F6', 0.5), to: 'F6', dur: 640, arc: true, lift: 40 },
+          { par: [{ actor: 'ball', from: 'HOME', to: 'F6', dur: 430, arc: true, lift: 88, fracFrom: 0.62 },
                   { actor: 'me', from: 'HOME', to: 'B1', dur: 950 }] },
           { sound: 'drop' }, { label: 'おとした！', at: 'F6', hold: 420 },
           { actor: 'ball', from: 'F6', to: [142, 186], dur: 220 },
@@ -191,11 +191,11 @@
       ruleType: 'basic_judgment', tacticalNote: null,
       animation: {
         toDecision: pitch().concat([
-          { par: [{ actor: 'ball', from: 'HOME', to: M('HOME', 'F7', 0.45), dur: 700, arc: true, lift: 82 },
+          { par: [{ actor: 'ball', from: 'HOME', to: 'F7', dur: 820, arc: true, lift: 98, frac: 0.7 },
                   batterGo()] }
         ]),
         onCorrect: [
-          { actor: 'ball', from: M('HOME', 'F7', 0.45), to: 'F7', dur: 640, arc: true, lift: 44 },
+          { actor: 'ball', from: 'HOME', to: 'F7', dur: 420, arc: true, lift: 98, fracFrom: 0.7 },
           { sound: 'catch' }, { label: 'キャッチ！', at: 'F7', hold: 520 },
           { actor: 'me', from: 'B2', to: 'B3', dur: 780 },
           { label: '三塁へ！', at: 'B3' }
@@ -216,11 +216,11 @@
       ruleType: 'basic_judgment', tacticalNote: null,
       animation: {
         toDecision: pitch().concat([
-          { par: [{ actor: 'ball', from: 'HOME', to: M('HOME', 'F7', 0.45), dur: 700, arc: true, lift: 82 },
+          { par: [{ actor: 'ball', from: 'HOME', to: 'F7', dur: 820, arc: true, lift: 98, frac: 0.7 },
                   batterGo()] }
         ]),
         onCorrect: [
-          { par: [{ actor: 'ball', from: M('HOME', 'F7', 0.45), to: 'F7', dur: 640, arc: true, lift: 44 },
+          { par: [{ actor: 'ball', from: 'HOME', to: 'F7', dur: 430, arc: true, lift: 98, fracFrom: 0.7 },
                   { actor: 'me', from: 'B2', to: 'B3', dur: 700 }] },
           { sound: 'drop' }, { label: 'おとした！', at: 'F7', hold: 420 },
           { actor: 'me', from: 'B3', to: 'HOME', dur: 780 },
@@ -230,17 +230,17 @@
     },
     {
       id: 's2-04', stage: 2, themes: ['outs', 'goro'], difficulty: 2,
-      outs: 0, runners: { third: true }, playerBase: 3,
-      play: { ballType: 'grounder', direction: 'SS', fielder: 'SS', depth: 'normal', outcome: 'caught' },
+      outs: 0, runners: { third: true }, playerBase: 3, infieldIn: true,
+      play: { ballType: 'grounder', direction: 'SS', fielder: 'SS', depth: 'in', outcome: 'caught' },
       decisionTiming: 'grounder_direction',
-      questionText: '0アウト。きみは 3るいランナー。\nショートに ゴロが とんだ！',
+      questionText: '0アウト。きみは 3るいランナー。\nないやが 前に 出て、ショートに ゴロ！',
       answerType: 'twoChoice',
       choices: [{ id: 'go', label: 'ホームへ 走る' }, { id: 'stay', label: 'とまって ようすを 見る' }],
       correctAnswer: 'stay', acceptableAnswers: [],
-      hint: 'まだ 0アウト。あと 何人 打てる？',
-      explanation: '0アウトなら、まだ 2回 チャンスが ある。\nあわてて 走らず、つぎの バッターに たくすのが 基本。',
+      hint: 'ないやが 前に いるよ。まだ 0アウト。',
+      explanation: 'ないやが 前に 出ている ときは、ゴロで 走ると ホームで アウトに なりやすい。\n0アウトなら まだ 2回 チャンスが ある。つぎの バッターに たくそう。',
       ruleType: 'tactical_judgment',
-      tacticalNote: '0アウト 3るいで ゴロの とき 走るか どうかは、チームに よって ちがうよ。ベンチの サインを かくにん しよう。',
+      tacticalNote: 'ないやが 下がって いる ときは、ゴロを 見て スタートする チームも あるよ。ベンチの サインを かくにん しよう。',
       animation: {
         toDecision: pitch().concat([
           { par: [{ actor: 'ball', from: 'HOME', to: M('HOME', 'F6', 0.55), dur: 460 }, batterGo()] }
@@ -256,15 +256,15 @@
     },
     {
       id: 's2-05', stage: 2, themes: ['outs', 'goro'], difficulty: 2,
-      outs: 2, runners: { third: true }, playerBase: 3,
-      play: { ballType: 'grounder', direction: 'SS', fielder: 'SS', depth: 'normal', outcome: 'caught' },
+      outs: 2, runners: { third: true }, playerBase: 3, infieldIn: true,
+      play: { ballType: 'grounder', direction: 'SS', fielder: 'SS', depth: 'in', outcome: 'caught' },
       decisionTiming: 'grounder_direction',
-      questionText: '2アウト。きみは 3るいランナー。\nショートに ゴロが とんだ！',
+      questionText: '2アウト。きみは 3るいランナー。\nないやが 前に 出て、ショートに ゴロ！',
       answerType: 'twoChoice',
       choices: [{ id: 'go', label: 'ホームへ 走る' }, { id: 'stay', label: 'とまって ようすを 見る' }],
       correctAnswer: 'go', acceptableAnswers: [],
       hint: '2アウト。バッターが アウトに なったら どうなる？',
-      explanation: '2アウトは、バッターが 一塁で アウトに なったら こうたい。\n走らないと 点は 入らない。ゴロを 見たら すぐ スタート。',
+      explanation: '2アウトは、バッターが 一塁で アウトに なったら こうたい。\nないやが 前でも、走らないと 点は 入らない。ゴロを 見たら すぐ スタート。',
       ruleType: 'basic_judgment', tacticalNote: null,
       animation: {
         toDecision: pitch().concat([
@@ -422,13 +422,13 @@
       ruleType: 'basic_judgment', tacticalNote: null,
       animation: {
         toDecision: pitch().concat([
-          { par: [{ actor: 'ball', from: 'HOME', to: M('HOME', 'F6', 0.5), dur: 600, arc: true, lift: 80 },
+          { par: [{ actor: 'ball', from: 'HOME', to: 'F6', dur: 600, arc: true, lift: 88, frac: 0.62 },
                   { actor: 'me', from: 'B1', to: [314, 216], dur: 420 },
                   batterGo()] }
         ]),
         onCorrect: [
           { par: [{ actor: 'me', from: [314, 216], to: 'B1', dur: 380 },
-                  { actor: 'ball', from: M('HOME', 'F6', 0.5), to: 'F6', dur: 560, arc: true, lift: 40 }] },
+                  { actor: 'ball', from: 'HOME', to: 'F6', dur: 430, arc: true, lift: 88, fracFrom: 0.62 }] },
           { sound: 'catch' }, { label: 'キャッチ！', at: 'F6', hold: 480 },
           { label: 'もどっていて セーフ', at: 'B1' }
         ]
@@ -502,11 +502,11 @@
       tacticalNote: 'チームに よっては「るいの あいだで まつ（ハーフウェイ）」と 教えるよ。まずは もどって 見るのが 安全。',
       animation: {
         toDecision: pitch().concat([
-          { par: [{ actor: 'ball', from: 'HOME', to: M('HOME', 'F8', 0.45), dur: 720, arc: true, lift: 88 },
+          { par: [{ actor: 'ball', from: 'HOME', to: 'F8', dur: 840, arc: true, lift: 100, frac: 0.7 },
                   batterGo()] }
         ]),
         onCorrect: [
-          { actor: 'ball', from: M('HOME', 'F8', 0.45), to: 'F8', dur: 680, arc: true, lift: 46 },
+          { actor: 'ball', from: 'HOME', to: 'F8', dur: 440, arc: true, lift: 100, fracFrom: 0.7 },
           { sound: 'catch' }, { label: 'キャッチ！', at: 'F8', hold: 520 },
           { actor: 'me', from: 'B2', to: 'B3', dur: 800 },
           { label: 'タッチアップ 成功！', at: 'B3' }

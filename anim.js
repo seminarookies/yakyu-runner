@@ -5,6 +5,8 @@
  * ステップの種類：
  *   { actor:'ball', from:'HOME', to:'SS', dur:600 }      … 移動
  *   { actor:'ball', from:'HOME', to:'LF', dur:1200, arc:true } … フライ（山なり）
+ *   { …, arc:true, frac:0.68 }        … 軌道の68%まで動かして止める（まだ空中）
+ *   { …, arc:true, fracFrom:0.68 }    … 68%地点から続きを動かす
  *   { set:'ball', at:'P' }                               … 瞬間移動
  *   { show:'ball' } / { hide:'ball' }                    … 表示切替
  *   { wait:300 }                                         … 待つ
@@ -48,6 +50,10 @@
     var dur = step.dur || 600;
     var arc = !!step.arc;
     var lift = step.lift || 64;
+    // frac / fracFrom：軌道ぜんたいの何割ぶんを動かすか。
+    // フライを「まだ高く上がっている途中」で止めたいときに使う。
+    var u0 = step.fracFrom != null ? step.fracFrom : 0;
+    var u1 = step.frac != null ? step.frac : 1;
     field.setVisible(step.actor, true);
 
     return new Promise(function (res) {
@@ -56,7 +62,8 @@
         if (self.cancelled) return res();
         if (t0 === null) t0 = ts;
         var raw = Math.min(1, (ts - t0) / dur);
-        var t = arc ? raw : easeInOut(raw);
+        var e = arc ? raw : easeInOut(raw);
+        var t = u0 + (u1 - u0) * e;          // 軌道ぜんたいの中での位置
         var x = F[0] + (T[0] - F[0]) * t;
         var y = F[1] + (T[1] - F[1]) * t;
         var scale = 1;
@@ -69,8 +76,13 @@
         a.el.setAttribute('transform', 'translate(' + x + ',' + y + ') scale(' + scale + ')');
         if (raw < 1) { self._raf = requestAnimationFrame(frame); }
         else {
-          a.pos = [T[0], T[1]];
-          a.el.setAttribute('transform', 'translate(' + T[0] + ',' + T[1] + ')');
+          // 途中で止める指定のときは、その位置のまま残す
+          var ex = F[0] + (T[0] - F[0]) * u1;
+          var ey = F[1] + (T[1] - F[1]) * u1;
+          var es = 1;
+          if (arc) { var eh = Math.sin(Math.PI * u1); ey -= lift * eh; es = 1 + 0.7 * eh; }
+          a.pos = [ex, ey];
+          a.el.setAttribute('transform', 'translate(' + ex + ',' + ey + ') scale(' + es + ')');
           res();
         }
       }
