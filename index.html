@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e1a2b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ランナーはんだん</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- ========== ホーム ========== -->
+<section class="screen is-active" id="screen-home">
+  <div class="home-inner">
+    <div class="logo">
+      <div class="logo-ball">⚾</div>
+      <h1>ランナー<br>はんだん</h1>
+      <p class="logo-sub">見て、きめて、走る</p>
+    </div>
+
+    <div class="title-chip" id="home-title">ルーキー</div>
+
+    <div class="home-buttons">
+      <button class="big-btn primary" data-go="stages">ステージに ちょうせん</button>
+      <button class="big-btn secondary" data-go="free">じゆう れんしゅう</button>
+    </div>
+
+    <div class="badge-strip" id="home-badges"></div>
+    <button class="text-btn" id="btn-badge-list">バッジを 見る</button>
+  </div>
+</section>
+
+<!-- ========== ステージ一覧 ========== -->
+<section class="screen" id="screen-stages">
+  <header class="sub-head">
+    <button class="icon-btn" data-go="home">←</button>
+    <h2>ステージ</h2>
+  </header>
+  <div class="list" id="stage-list"></div>
+</section>
+
+<!-- ========== 自由練習 ========== -->
+<section class="screen" id="screen-free">
+  <header class="sub-head">
+    <button class="icon-btn" data-go="home">←</button>
+    <h2>じゆう れんしゅう</h2>
+  </header>
+  <p class="lead">すきな テーマを えらんで れんしゅう できるよ。</p>
+  <div class="list" id="theme-list"></div>
+</section>
+
+<!-- ========== プレイ ========== -->
+<section class="screen" id="screen-play">
+  <header class="play-head">
+    <button class="icon-btn" id="btn-quit">×</button>
+    <button class="icon-btn small" id="btn-sound" title="音">🔊</button>
+    <div class="outs" id="outs-box">
+      <span class="outs-label">アウト</span>
+      <span class="dots"><i></i><i></i><i></i></span>
+    </div>
+    <div class="you-chip" id="you-chip">バッター</div>
+    <div class="qcount"><b id="q-no">1</b>/<span id="q-total">5</span></div>
+  </header>
+
+  <div class="field-wrap" id="field-wrap">
+    <div class="decision-badge" id="decision-badge">どうする？</div>
+    <div class="round-card" id="round-card">
+      <div class="rc-no">だい 1 もん</div>
+      <div class="rc-sub">よく 見てね</div>
+    </div>
+  </div>
+
+  <div class="play-foot">
+    <p class="question" id="question-text"></p>
+    <div class="answers" id="answers"></div>
+    <p class="tap-hint" id="tap-hint">グラウンドの るいを タップ！</p>
+    <div class="feedback" id="feedback"></div>
+  </div>
+</section>
+
+<!-- ========== 結果 ========== -->
+<section class="screen" id="screen-result">
+  <div class="result-inner">
+    <div class="result-mark" id="result-mark">🎉</div>
+    <h2 id="result-title">ステージ クリア！</h2>
+    <div class="score" id="result-score"><b>4</b> / 5 もん せいかい</div>
+    <div class="got-badges" id="result-badges"></div>
+    <div class="result-buttons" id="result-buttons"></div>
+  </div>
+</section>
+
+<!-- ========== バッジ一覧 ========== -->
+<div class="overlay" id="overlay-badges">
+  <div class="sheet">
+    <h3>バッジ</h3>
+    <div class="badge-grid" id="badge-grid"></div>
+    <button class="big-btn secondary" id="btn-close-badges">とじる</button>
+    <button class="text-btn danger" id="btn-reset">きろくを ぜんぶ けす</button>
+  </div>
+</div>
+
+<script src="./sound.js"></script>
+<script src="./field.js"></script>
+<script src="./anim.js"></script>
+<script src="./questions.js"></script>
+<script src="./badges.js"></script>
+<script src="./engine.js"></script>
+<script src="./ui.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
